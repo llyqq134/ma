@@ -1,0 +1,17 @@
+FROM golang:1.25-alpine AS builder
+
+WORKDIR /usr/local/src
+
+RUN apk --no-cache add bash gcc gettext musl-dev
+
+COPY go.* ./
+RUN go mod download
+
+COPY . .
+RUN go build -o ./bin/sec ./main.go
+
+FROM alpine AS runner
+RUN apk --no-cache add bash
+COPY --from=builder /usr/local/src/bin/sec /
+
+CMD ["/sec"]

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-external
+  namespace: default
+  labels:
+    environment: production
+spec:
+  selector:
+    app: prod-frontend
+  type: NodePort
+  ports:
+  - name: frontend-external
+    protocol: TCP
+    port: 80
+    targetPort: 80
+    nodePort: 30080
+

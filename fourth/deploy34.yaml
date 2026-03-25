@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata: 
+  name: failure-app
+  labels:
+    app: failure 
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: failure
+  template:
+    metadata:
+      labels:
+        app: failure
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:1.25
+        ports:
+        - containerPort: 80

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: debug-pod
+  labels:
+    env: test
+    app: debug
+spec:
+  containers:
+    - name: nginx-container
+      image: nginx:alpine
+      ports:
+        - containerPort: 80
+      volumeMounts:
+        - name: cfg
+          mountPath: /nginx
+    - name: busybox-container
+      image: busybox:latest
+      ports: 
+        - containerPort: 8080
+      volumeMounts:
+        - name: cfg
+          mountPath: /busybox
+      command: ["sh", "-c", "while true; do echo $(date) >> /shared/log.txt; sleep 5; done"]
+  volumes: 
+    - name: cfg
+      emptyDir: {}

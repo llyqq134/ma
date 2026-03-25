@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: prod-backend
+  labels:
+    app: web-server
+    environment: production
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: prod-backend
+  template:
+    metadata:
+      labels:
+        app: prod-backend
+        environment: production
+    spec:
+      containers:
+      - name: httpd-container
+        image: httpd:2.4 
+        ports:
+        - containerPort: 8080
+        command: ["/bin/sh"]
+        args:
+          - "-c"
+          - |
+            cp /usr/local/apache2/conf/httpd.conf /usr/local/apache2/conf/httpd-custom.conf && \
+            sed -i 's/^Listen 80/Listen 8080/g' /usr/local/apache2/conf/httpd-custom.conf && \
+            sed -i 's/^#ServerName www.example.com:80/ServerName localhost:8080/g' \
+              /usr/local/apache2/conf/httpd-custom.conf
+            echo "<h1>Apache server working on port 8080</h1>" > \
+              /usr/local/apache2/htdocs/index.html && \
+            echo "<p>Pod: $(hostname)</p>" >> /usr/local/apache2/htdocs/index.html && \
+            httpd -f /usr/local/apache2/conf/httpd-custom.conf -DFOREGROUND
+

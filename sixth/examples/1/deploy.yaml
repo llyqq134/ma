@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: liveness-exec
+spec:
+  selector:
+    matchLabels:
+      app: liveness-exec 
+  template:
+    metadata:
+      labels:
+        app: liveness-exec
+    spec:
+      containers:
+      - name: myjob
+        image: alpine
+        command: ["/bin/sh"]
+        args: ["-c", "touch /tmp/healthy; sleep 30; rm -f /tmp/healthy; sleep 600"]
+        livenessProbe:
+          exec:
+            command:
+            - cat
+            - /tmp/healthy
+          initialDelaySeconds: 5
+          periodSeconds: 5

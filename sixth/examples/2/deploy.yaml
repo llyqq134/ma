@@ -1,0 +1,26 @@
+# https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: liveness-tcp
+spec:
+  selector:
+    matchLabels:
+      app: liveness-tcp
+  template:
+    metadata:
+      labels:
+        app: liveness-tcp
+    spec:
+     containers:
+      - name: liveness-tcp
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        livenessProbe:
+          tcpSocket:
+            port: 6378
+          initialDelaySeconds: 15
+          periodSeconds: 20
+
+ 

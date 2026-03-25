@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: web-app
+  labels:
+    app: web-server
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-app
+  template:
+    metadata:
+      labels:
+        app: web-app
+        environment: test
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:1.25-alpine
+        ports:
+          - containerPort: 80
+        env:
+        - name: NGINX_PORT
+          value: "80"
+
+
