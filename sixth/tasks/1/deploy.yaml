@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: liveness-ex 
+spec:
+  selector:
+    matchLabels:
+      app: liveness-ex 
+  template:
+    metadata: 
+      labels:
+        app: liveness-ex
+    spec:
+      containers:
+      - name: exec-container
+        image: busybox
+        command: ["sh", "-c", "touch /tmp/healthy; sleep 3600"]
+        livenessProbe: 
+          exec:
+           command:
+           - cat
+           - /tmp/healthy
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+      - name: http-container
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+            httpHeaders:
+            - name: custom-header
+              value: health-check
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 5
+
+      - name: tcp-container
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        livenessProbe:
+          tcpSocket:
+              port: 6379
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
