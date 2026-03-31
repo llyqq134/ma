@@ -1,4 +1,5 @@
 apiVersion: apps/v1
+<<<<<<< HEAD
 kind: Deployment
 metadata:
   name: combined
@@ -34,4 +35,36 @@ spec:
           periodSeconds: 5
         ports:
         - containerPort: 80
+=======
+kind: Deployment 
+metadata:
+  name: liveness-combined
+spec:
+  selector:
+    matchLabels:
+      app: liveness-combined
+  template:
+    metadata:
+      labels: 
+        app: liveness-combined 
+    spec:
+      containers:
+      - name: app 
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+        command: ["sh", "-c", "sleep 30"]
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initilaySeconds: 30
+          periodSeconds: 10
+        readinessProbe: 
+          httpGet:
+            path: / 
+            port: 80
+          initilaySeconds: 5
+          periodSeconds: 5
+>>>>>>> 1106d7a41ee673458dd458e5a91fece99ebc24a2
 
