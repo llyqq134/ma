@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: volume
+  labels:
+    app: volume
+spec:
+  selector:
+    matchLabels:
+      app: volume
+  template:
+    metadata:
+      labels:
+        app: volume
+    spec:
+      containers:
+      - name: generator
+        image: alpine
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do echo $(date) | tee -a /data/log.txt; sleep 10; done"]
+        volumeMounts:     
+        - name: shared-data
+          mountPath: /data
+
+      - name: reader
+        image: alpine
+        command: ["/bin/sh"]
+        args: ["-c", "tail -f /data/log.txt"]
+        volumeMounts: 
+        - name: shared-data
+          mountPath: /data
+
+      volumes:
+        - name: shared-data
+          emptyDir: {}

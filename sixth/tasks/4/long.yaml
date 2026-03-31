@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: long-launch
+  labels:
+    app: long-launch
+spec:
+  selector:
+    matchLabels:
+      app: long-launch
+  template:
+    metadata:
+      labels:
+        app: long-launch
+    spec:
+      containers:
+      - name: long-launch
+        image: alpine
+        command: ["/bin/sh"]
+        args: ["-c", "sleep 10;"]
+        ports:
+        - containerPort: 80 
+
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 2
+          periodSeconds: 5
+

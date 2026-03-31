@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: combined-svc
+spec:
+  selector:
+    app: combined
+  type: ClusterIP
+  ports:
+  - name: combined-svc
+    protocol: TCP
+    port: 80
+    targetPort: 80
+

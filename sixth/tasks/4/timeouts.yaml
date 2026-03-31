@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: timeouts
+spec:
+  selector:
+    matchLabels:
+      app: timeouts
+  template:
+    metadata:
+      labels:
+        app: timeouts
+    spec:
+      containers:
+      - name: timeouts
+        image: nginx:1.25
+        command: ["/bin/sh"]
+        args:
+        - "-c"
+        - |
+          sleep 10;
+          nginx -g 'daemon off;';
+
+        livenessProbe:
+          httpGet:
+            port: 80
+            path: /health
+          initialDelaySeconds: 2
+          timeoutSeconds: 1
+          periodSeconds: 5
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 80
+          initialDelaySeconds: 2
+          timeoutSeconds: 1
+          periodSeconds: 5
+        ports:
+        - containerPort: 80
+ 

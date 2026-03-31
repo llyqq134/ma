@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bad-ports
+  labels:
+    app: bad-ports
+spec:
+  selector:
+    matchLabels:
+      app: bad-ports
+  template:
+    metadata:
+      labels:
+        app: bad-ports
+    spec:
+      containers:
+      - name: bad-ports
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        
+        livenessProbe:
+          tcpSocket:
+            port: 6380
+          initialDelaySeconds: 10
+          periodSeconds: 5
+
