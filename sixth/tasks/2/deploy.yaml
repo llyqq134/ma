@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: combined
+spec:
+  selector:
+    matchLabels:
+      app: combined
+  template:
+    metadata:
+      labels:
+        app: combined
+    spec:
+      containers:
+      - name: nginx-container
+        image: nginx:1.25
+        command: ["/bin/sh"]
+        args: 
+        - "-c"
+        - |
+          sleep 40;
+          nginx -g 'daemon off;';
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 50
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        ports:
+        - containerPort: 80
+
