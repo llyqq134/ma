@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod 
+metadata:
+  name: no-pod 
+spec:
+  containers:
+  - name: busybox-container
+    image: busybox 
+    command: ["/bin/sh"]
+    args: ["-c", "sleep 3600"]
+    env:
+    - name: LEVEL
+      valueFrom:
+        configMapKeyRef:
+          name: config-map
+          key: LOG_LEVEL

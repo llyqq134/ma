@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: ConfigMap 
+metadata:
+  name: web-content
+data:
+  page.title: "My app"
+  welcome.text: "Welcome to demo app"
+  footer.info: "Version 1.0 | ConfigMap Demo"
+
+---
+
+apiVersion: apps/v1
+kind: Deployment 
+metadata:
+  name: web-demo 
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web-demo 
+  template:
+    metadata:
+      labels:
+        app: web-demo
+    spec: 
+      containers:
+      - name: nginx-container
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: web-volume 
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: web-volume 
+        configMap:
+          name: web-content 
+          items: 
+          - key: page.title 
+            path: page.title 
+          - key: welcome.text 
+            path: welcome.text 
+          - key: footer.info  
+            path: footer.info
+            
+---
+
+apiVersion: v1
+kind: Service 
+metadata:
+  name: web-demo-service 
+spec: 
+  type: NodePort
+  selector: 
+    app: web-demo 
+  ports:
+  - port: 80
+    nodePort: 30085
