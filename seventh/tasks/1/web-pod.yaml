@@ -6,14 +6,16 @@ spec:
   containers: 
   - name: test-container
     image: busybox
+    command: ["/bin/sh"]
+    args: ["-c", "sleep 3600"]
     env:
     - name: COLOR
       valueFrom:
         configMapKeyRef:
-          name: app-config 
+          name: web-config 
           key: APP_COLOR
     - name: APP_ENV
       valueFrom: 
         configMapKeyRef: 
-          name: app-config 
+          name: web-config 
           key: APP_ENV
