@@ -15,3 +15,8 @@ spec:
   - name: config-volume 
     configMap:
       name: app-file-config
+      items:
+      - key: application.properties
+        path: app.properties
+      - key: config.ini
+        path: settings.ini
