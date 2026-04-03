@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod 
+metadata:
+  name: my-secret-pod 
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx 
+    volumeMounts: 
+    - name: secret-volume 
+      mountPath: /app/secrets/encrytion.key 
+    env:
+    - name: API_KEY
+      valueFrom:
+        secretKeyRef:
+          name: super-secret
+          key: api_key 
+    - name: AUTH_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: super-secret 
+          key: auth_token 
+  volumes:
+  - name: secret-volume
+    secret:
+      secretName: super-secret
