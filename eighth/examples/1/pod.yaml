@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod 
+metadata:
+  name: app-secret-env-pod 
+spec:
+  containers:
+  - name: app-container 
+    image: nginx:alpine 
+    env:
+    - name: DATABASE_USERNAME
+      valueFrom: 
+        secretKeyRef:
+          name: app-credentials
+          key: DB_USERNAME 
+          optional: false
+    - name: DATABASE_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: app-credentials
+          key: DB_PASSWORD 
+          optional: false
+
