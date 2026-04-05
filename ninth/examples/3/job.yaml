@@ -1,0 +1,14 @@
+apiVersion: batch/v1 
+kind: Job 
+metadata:
+  name: parallel-job 
+spec:
+  completions: 6 
+  parallelism: 2
+  template:
+    spec:
+      containers:
+      - name: worker 
+        image: busybox
+        command: ["sh", "-c", "echo Running task on pod $HOSTNAME; sleep 10"]
+      restartPolicy: Never

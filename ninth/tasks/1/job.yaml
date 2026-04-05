@@ -1,0 +1,20 @@
+apiVersion: batch/v1 
+kind: Job 
+metadata:
+  name: file-generator-job 
+spec:
+  template:
+    spec:
+      containers:
+      - name: busybox-container 
+        image: busybox 
+        command:
+        - sh 
+        - -c       
+        - | 
+          mkdir -p /output 
+          for i in $(seq 1 10); do 
+            echo $i: $RANDOM  >> /output/numbers.txt
+          done 
+          cat /output/numbers.txt
+      restartPolicy: OnFailure
