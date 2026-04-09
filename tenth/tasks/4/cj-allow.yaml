@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: allow-cron
+spec:
+  schedule: "*/2 * * * *"
+  concurrencyPolicy: Allow
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: busybox-container
+            image: busybox
+            command: ["/bin/sh"]
+            args: ["-c", "echo sleeping...; sleep 150"]
+          restartPolicy: OnFailure
+

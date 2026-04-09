@@ -1,0 +1,26 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: parallel-batch-cron
+spec:
+  schedule: "*/3 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      completions: 6 
+      parallelism: 2
+      template:
+        spec:
+          containers:
+          - name: worker
+            image: busybox
+            command:
+            - sh 
+            - -c 
+            - | 
+              echo "doing task $HOSTNAME: "
+              sleep 90
+              echo "$HOSTNAME task is done"
+          restartPolicy: OnFailure
+
+

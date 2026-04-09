@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: limited-task-cron 
+spec:
+  schedule: "*/2 * * * *"
+  jobTemplate:
+    spec:
+      activeDeadlineSeconds: 30
+      backoffLimit: 2
+      template:
+        spec:
+          containers:
+          - name: sleeper 
+            image: busybox
+            command: 
+            - sh 
+            - -c 
+            - | 
+              echo "starting sleep 60"
+              sleep 60
+              echo "unsleep"
+          restartPolicy: OnFailure
