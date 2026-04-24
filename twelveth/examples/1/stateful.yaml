@@ -3,32 +3,34 @@ kind: StatefulSet
 metadata:
   name: web-statefulset
 spec:
+  updateStrategy:
+    type: OnDelete
   serviceName: "web-service"
   replicas: 3
   selector:
     matchLabels:
       app: nginx-stateful 
-    template:
-      metadata:
-        labels:
+  template:
+    metadata:
+      labels:
           app: nginx-stateful
-      spec: 
-        containers:
-        - name: nginx 
-          image: nginx:1.25
-          ports:
-          - containerPort: 80
-          volumeMounts:
-          - name: www
-            mountPath: /usr/share/nginx/html 
-    volumeClaimTemplates: 
-    - metadata:
-        name: www 
-      spec: 
-        accessMode: [ "ReadWriteOnce" ]
-        storageClassName: "hostpath"
-        resources:
-          request:
-            storage: 1Gi
+    spec: 
+      containers:
+      - name: nginx 
+        image: nginx:1.25
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html 
+  volumeClaimTemplates: 
+  - metadata:
+      name: www 
+    spec: 
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "standard"
+      resources:
+        requests:
+          storage: 1Gi
 
 
